@@ -1,0 +1,11 @@
+
+#pragma once
+
+#define WINDOW_SIZE_WT 1024
+#define WINDOW_SIZE_HT 760 
+
+class App {
+public:
+    App() {};
+    virtual int main(const std::vector<std::string> &args);
+};
