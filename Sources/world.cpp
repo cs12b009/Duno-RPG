@@ -3,7 +3,13 @@
 
 #include "world.h"
 
+#define MAP_WIDTH 1366
+#define MAP_HEIGHT 768
+
+int max_ht=0;
+int max_wt = 0;
     clan::Point cursor_pt;
+    
 World::World(clan::DisplayWindow &display_window) : window(display_window), quit(false) {
     
     clan::Slot slot_quit = window.sig_window_close().connect(this, &World::on_window_close);
@@ -49,26 +55,41 @@ World::~World() {
 void World::onMouseMove(const clan::InputEvent &key) {
     int i;
     
-//     game_map.draw(canvas, -key.mouse_pos.x, -key.mouse_pos.y);
     if(key.mouse_pos.x>MAP_WIDTH-100) 
     for(i=0;i<10;i++){
+        max_wt += 1;
+        if(max_wt>3200-(MAP_WIDTH)){
+            max_wt = 3200-(MAP_WIDTH);
+            break;
+        }
         cursor_pt.x += -1;
-        game_map.draw(canvas,cursor_pt.x,cursor_pt.y);
     }
     if(key.mouse_pos.x<100)
     for(i=0;i<10;i++){
+        max_wt -= 1;
+        if(max_wt<0){
+            max_wt =0;
+            break;
+        }
         cursor_pt.x -= -1;
-        game_map.draw(canvas,cursor_pt.x,cursor_pt.y);
     }
     if(key.mouse_pos.y<100)
     for(i=0;i<10;i++){
+        max_ht -= 1;
+        if(max_ht<0){
+            max_ht = 0;
+            break;
+        }
         cursor_pt.y -= -1;
-        game_map.draw(canvas,cursor_pt.x,cursor_pt.y);
     }
     if(key.mouse_pos.y>MAP_HEIGHT-100) 
     for(i=0;i<10;i++){
+        max_ht += 1;
+        if(max_ht>2400-(MAP_HEIGHT)){
+            max_ht = 2400-(MAP_HEIGHT);
+            break;
+        }
         cursor_pt.y += -1;
-        game_map.draw(canvas,cursor_pt.x,cursor_pt.y);
     }
 }
 

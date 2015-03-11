@@ -8,7 +8,7 @@ int App::main(const std::vector<std::string> &args) {
     // Create a window
     clan::DisplayWindowDescription desc;
     desc.set_title("Change this title");
-    desc.set_size(clan::Size(MAP_HEIGHT,768),true);
+    desc.set_size(clan::Size(MAP_WIDTHsd,MAP_HEIGHT),true);
     clan::DisplayWindow window(desc);
     
     clan::SoundOutput output(44100);

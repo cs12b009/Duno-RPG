@@ -2,8 +2,6 @@
 
 #include <list>
 
-#define MAP_WIDTH 768
-#define MAP_HEIGHT 1024
 
 class Surface;
 class Edifice;
