@@ -3,4 +3,29 @@
         <image name="background">
                 <image file="Gfx/background.png"/>
         </image>
+        
+        <sprite name="GenBodyMoving" base_angle="0">
+            <image file="Gfx/ash_moving1.png" />
+            <image file="Gfx/ash_moving2.png" />
+            <image file="Gfx/ash_moving3.png" />
+            <translation origin="center" />
+            <rotation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        <sprite name="GenBodyStill" base_angle="0">
+            <image file="Gfx/ash_still1.png" />
+            <translation origin="center" />
+            <rotation origin="center" />
+        </sprite>
+        
+        <sprite name="GenBodySelected" base_angle="180">
+            <image file="Gfx/ash_selected.png" />
+            <translation origin="center" />
+            <rotation origin="center" />
+        </sprite>
+     
+//-----S O U N D S
+        <sample name="Music1" file="Sound/Song.ogg"/>
+
 </resources>

@@ -3,7 +3,7 @@
 #include <list>
 
 class Surface;
-class Edifice;
+class GameObject;
 class Persona;
 
 class World {
@@ -20,9 +20,8 @@ public:
     //Operations
 public:
     void initLevel();
-    bool hitCheck(clan::CollisionOutline &outline, Edifice *other);
-    void addEdifice(Edifice *object);
-    void addPersona(Persona *person);
+    bool hitCheck(clan::CollisionOutline &outline, GameObject *other);
+    void addGameObject(GameObject *object);
     void run();
     
     //Implementation
@@ -31,7 +30,7 @@ private:
     void update(int timeElapsed_ms);
     
     void onKeyDown(const clan::InputEvent &key);
-    void onMouseDown(const clan::InputEvent &key);
+    void onMouseClick(const clan::InputEvent &key);
     void onMouseUp(const clan::InputEvent &key);
     void onMouseMove(const clan::InputEvent &key);
     void on_window_close();
@@ -43,13 +42,17 @@ private:
     clan::Slot slotKeyDown;
     
     clan::Image game_map;
+    clan::Point map_zoom_pt;
     
     bool dragging;
     bool mouseDown;
     clan::Rect dragArea;
     float highlightValue;
     
-    std::list<Edifice *> edifices;
+    //Sounds
+    clan::SoundBuffer_Session *music_session_;
+
+    std::list<GameObject *> gameobjects;
     std::list<Persona *> persons;
     
     clan::DisplayWindow window;

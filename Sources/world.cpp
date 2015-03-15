@@ -2,13 +2,13 @@
 #include "precomp.h"
 
 #include "world.h"
+#include "persona.h"
 
 #define MAP_WIDTH 1366
 #define MAP_HEIGHT 768
 
 int max_ht=0;
 int max_wt = 0;
-    clan::Point cursor_pt;
     
 World::World(clan::DisplayWindow &display_window) : window(display_window), quit(false) {
     
@@ -28,17 +28,20 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
     resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
     game_map = clan::Image::resource(canvas, "background", resources);
     
+    map_zoom_pt.x = 0;
+    map_zoom_pt.y = 0;
     // Recieve mouse clicks
     /*slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
     slotMouseDown = window.get_ic().get_mouse().sig_key_down().connect(this, &World::onMouseDown);
-    slotMouseDblClick = window.get_ic().get_mouse().sig_key_dblclk().connect(this, &World::onMouseDown);
+    slotMouseDblClick = window.get_ic().get_mouse().sig_key_dblclk().connect(this, &World::onMouseDown); */
 
-    slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseUp); */
+    slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseClick);
     slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
 
     // dragging = mouseDown = false;
     
-    // Initi game_map - add_edifices etc TODO
+    // Initi game_map - add_gameobjects etc 
+    initLevel();
     
     // Run the main loop
     run();
@@ -46,9 +49,47 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 
 World::~World() {
     // Class Destructor
-    std::list<Edifice *>::iterator it;
-    /*for(it = edifices.begin(); it != edifices.end(); ++it)
-        delete(*it);*/ //TODO
+    std::list<GameObject *>::iterator it;
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it)
+        delete(*it);
+}
+
+void World::initLevel() {
+    Persona *person1 = new Persona(Persona::GEN_MAX, this);
+    person1->setPos(100,100);
+    
+    gameobjects.push_back(person1);
+    persons.push_back(person1);
+}
+
+// Clicking on units
+void World::onMouseClick(const clan::InputEvent &key) {
+    // Right click = move or attack
+    if(key.id == clan::mouse_right) {
+        std::list<Persona *>::iterator it;
+        for(it = persons.begin(); it != persons.end(); ++it) {
+            Persona *person1 = (*it);
+            
+            // Change destination for selected persons
+            if(person1->isSelected())
+                person1->setTargetPos(key.mouse_pos.x, key.mouse_pos.y);
+        }
+    }
+    
+    // Left click = select
+    if(key.id == clan::mouse_left) {
+        std::list<Persona *>::iterator it;
+        for(it = persons.begin(); it != persons.end(); ++it) {
+            Persona *person1 = (*it);
+            
+            // Just left click on map deselects
+            if(person1->isSelected())
+                person1->deselect();
+            // Select person
+            if(person1->hitCheck(key.mouse_pos.x, key.mouse_pos.y))
+                person1->select();
+        }
+    }
 }
 
 // Change map view on window
@@ -62,7 +103,7 @@ void World::onMouseMove(const clan::InputEvent &key) {
             max_wt = 3200-(MAP_WIDTH);
             break;
         }
-        cursor_pt.x += -1;
+        map_zoom_pt.x += -1;
     }
     if(key.mouse_pos.x<100)
     for(i=0;i<10;i++){
@@ -71,7 +112,7 @@ void World::onMouseMove(const clan::InputEvent &key) {
             max_wt =0;
             break;
         }
-        cursor_pt.x -= -1;
+        map_zoom_pt.x -= -1;
     }
     if(key.mouse_pos.y<100)
     for(i=0;i<10;i++){
@@ -80,7 +121,7 @@ void World::onMouseMove(const clan::InputEvent &key) {
             max_ht = 0;
             break;
         }
-        cursor_pt.y -= -1;
+        map_zoom_pt.y -= -1;
     }
     if(key.mouse_pos.y>MAP_HEIGHT-100) 
     for(i=0;i<10;i++){
@@ -89,14 +130,22 @@ void World::onMouseMove(const clan::InputEvent &key) {
             max_ht = 2400-(MAP_HEIGHT);
             break;
         }
-        cursor_pt.y += -1;
+        map_zoom_pt.y += -1;
     }
 }
 
 void World::run() {
     clan::GameTime game_time;
-        cursor_pt.x = 0;
-        cursor_pt.y = 0;
+    // ----  Music
+    clan::SoundBuffer music = clan::SoundBuffer::resource("Music1",resources);
+    music.set_volume(0.8f);
+    
+    clan::SoundBuffer_Session music_session = music.prepare();
+    
+    music_session.set_looping(true);
+    music_session.play();
+    // ----  Music done
+    
     while(!window.get_ic().get_keyboard().get_keycode(clan::keycode_escape)) {
         game_time.update();
         if (quit)
@@ -112,27 +161,27 @@ void World::run() {
 
 void World::update(int timeElapsed_ms) {
     // update all stuff
-    std::list<Edifice *>::iterator it;
-    for(it = edifices.begin(); it != edifices.end(); ) {
-        // if update = false => delete edifices
-        /* if ((*it)->update(timeElapsed_ms) == false) {
+    std::list<GameObject *>::iterator it;
+    for(it = gameobjects.begin(); it != gameobjects.end(); ) {
+        // if update = false => delete gameobjects
+        if ((*it)->update(timeElapsed_ms) == false) {
             delete (*it);
-            it = edifices.erase(it);
+            it = gameobjects.erase(it);
         }
         else
-            ++it; */ //TODO
+            ++it; //TODO
     }
 }
 
 void World::draw() {
     // Draw background
     clan::Rect window_rect = window.get_viewport();
-    game_map.draw(canvas, cursor_pt.x,cursor_pt.y);
+    game_map.draw(canvas, map_zoom_pt.x,map_zoom_pt.y);
         
-    // Draw all edifices
-    std::list<Edifice *>::iterator it;
-    for(it = edifices.begin(); it != edifices.end(); ++it)
-        //(*it)->draw(); TODO
+    // Draw all gameobjects
+    std::list<GameObject *>::iterator it;
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it)
+        (*it)->draw();
     
     // TODO view boxes and map dragging should be somewhere here
     

@@ -2,9 +2,9 @@ EXAMPLE_BIN=spritesrts
 
 OBJF=./Sources/world.o \
 ./Sources/app.o \
+./Sources/persona.o \
 ./Sources/program.o \
 ./Sources/precomp.o
-
 
 LIBS=clanCore clanDisplay clanSound clanApp clanGL clanSWRender
 
