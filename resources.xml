@@ -3,7 +3,16 @@
         <image name="background">
                 <image file="Gfx/background.png"/>
         </image>
-        
+
+        <image name="minimap">
+                <image file="Gfx/minimap.png"/>
+        </image>
+
+        <sprite name="MiniMapSelect" base_angle="0">
+            <image file="Gfx/minimap_rect1.png" />
+            <translation origin="center" />
+        </sprite>
+
         <sprite name="GenBodyMoving" base_angle="0">
             <image file="Gfx/ash_moving1.png" />
             <image file="Gfx/ash_moving2.png" />
@@ -16,16 +25,14 @@
         <sprite name="GenBodyStill" base_angle="0">
             <image file="Gfx/ash_still1.png" />
             <translation origin="center" />
-            <rotation origin="center" />
         </sprite>
         
         <sprite name="GenBodySelected" base_angle="180">
             <image file="Gfx/ash_selected.png" />
             <translation origin="center" />
-            <rotation origin="center" />
         </sprite>
      
 //-----S O U N D S
-        <sample name="Music1" file="Sound/Song.ogg"/>
+        <sample name="Music1" file="Sound/beats1.ogg"/>
 
 </resources>

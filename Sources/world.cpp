@@ -28,6 +28,12 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
     resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
     game_map = clan::Image::resource(canvas, "background", resources);
     
+    //Mini-map Initialization
+    mini_map = clan::Image::resource(canvas, "minimap", resources);
+
+    //Mini-map Select
+    mini_map_select = clan::Sprite::resource(canvas, "MiniMapSelect", resources);
+
     map_zoom_pt.x = 0;
     map_zoom_pt.y = 0;
     // Recieve mouse clicks
@@ -37,8 +43,6 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 
     slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseClick);
     slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
-
-    // dragging = mouseDown = false;
     
     // Initi game_map - add_gameobjects etc 
     initLevel();
@@ -89,6 +93,12 @@ void World::onMouseClick(const clan::InputEvent &key) {
             if(person1->hitCheck(key.mouse_pos.x, key.mouse_pos.y))
                 person1->select();
         }
+
+        //Select Mini-map-select ,when clicked on Mini-map 
+        // if(mini_map.hitCheck(key.mouse_pos.x, key.mouse_pos.y)){
+        // 	mini_map_select->select();
+        // }
+
     }
 }
 
@@ -177,7 +187,13 @@ void World::draw() {
     // Draw background
     clan::Rect window_rect = window.get_viewport();
     game_map.draw(canvas, map_zoom_pt.x,map_zoom_pt.y);
-        
+    
+    // mini_map.set_scale(0.2f, 0.2f);
+    mini_map.draw(canvas, 1366-mini_map.get_width(),768-mini_map.get_height());
+
+    // mini_map_select.set_scale(0.05f,0.05f);
+    mini_map_select.draw(canvas,1366 - mini_map.get_width() + mini_map_select.get_width()/2 + max_wt/13 , 768 - mini_map.get_height() + mini_map_select.get_height()/2 + max_ht/12);
+
     // Draw all gameobjects
     std::list<GameObject *>::iterator it;
     for(it = gameobjects.begin(); it != gameobjects.end(); ++it)

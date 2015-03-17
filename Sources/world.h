@@ -42,6 +42,8 @@ private:
     clan::Slot slotKeyDown;
     
     clan::Image game_map;
+    clan::Image mini_map;
+    clan::Sprite mini_map_select;
     clan::Point map_zoom_pt;
     
     bool dragging;
