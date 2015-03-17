@@ -138,7 +138,7 @@ void World::run() {
     clan::GameTime game_time;
     // ----  Music
     clan::SoundBuffer music = clan::SoundBuffer::resource("Music1",resources);
-    music.set_volume(0.8f);
+    music.set_volume(0.3f);
     
     clan::SoundBuffer_Session music_session = music.prepare();
     
