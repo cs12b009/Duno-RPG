@@ -42,7 +42,7 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
     slotMouseDblClick = window.get_ic().get_mouse().sig_key_dblclk().connect(this, &World::onMouseDown); */
 
     slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseClick);
-    slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
+    // slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
     
     // Initi game_map - add_gameobjects etc 
     initLevel();
@@ -84,11 +84,26 @@ void World::onMouseClick(const clan::InputEvent &key) {
     // Left click = select
     if(key.id == clan::mouse_left) {
 
-        if(key.mouse_pos.x < 1366 - mini_map_select.get_width()/2 && key.mouse_pos.x > 1086 + mini_map_select.get_width()/2) {
-            max_wt = (key.mouse_pos.x - 1086 - mini_map_select.get_width()/2)*13;
+        if(key.mouse_pos.x < 1366  && key.mouse_pos.x > 1086 ) {
+            if(key.mouse_pos.x < 1086 + mini_map_select.get_width()/2){
+                max_wt=0;
+            }else if (key.mouse_pos.x > 1366 - mini_map_select.get_width()/2)
+            {
+                max_wt=1836;
+            }else{
+                max_wt = (key.mouse_pos.x - 1086 - mini_map_select.get_width()/2)*13;
+            }
         }
-        if(key.mouse_pos.y < 768 - mini_map_select.get_height()/2 && key.mouse_pos.y > 558 + mini_map_select.get_height()/2) {
-            max_ht = (key.mouse_pos.y - 558 - mini_map_select.get_height()/2)*12;
+        if(key.mouse_pos.y < 768  && key.mouse_pos.y > 558 ) {
+            if (key.mouse_pos.y > 768 - mini_map_select.get_height()/2)
+            {
+                max_ht=1600;
+            }else if (key.mouse_pos.y < 558 + mini_map_select.get_height()/2)
+            {
+                max_ht=0;
+            }else{
+                max_ht = (key.mouse_pos.y - 558 - mini_map_select.get_height()/2)*12;
+            }
         }
 
         std::list<Persona *>::iterator it;
@@ -112,46 +127,46 @@ void World::onMouseClick(const clan::InputEvent &key) {
 }
 
 // Change map view on window
-void World::onMouseMove(const clan::InputEvent &key) {
-    int i;
+// void World::onMouseMove(const clan::InputEvent &key) {
+//     int i;
     
-    if(key.mouse_pos.x>MAP_WIDTH-100) 
-    for(i=0;i<10;i++){
-        max_wt += 1;
-        if(max_wt>3200-(MAP_WIDTH)){
-            max_wt = 3200-(MAP_WIDTH);
-            break;
-        }
-        map_zoom_pt.x += -1;
-    }
-    if(key.mouse_pos.x<100)
-    for(i=0;i<10;i++){
-        max_wt -= 1;
-        if(max_wt<0){
-            max_wt =0;
-            break;
-        }
-        map_zoom_pt.x -= -1;
-    }
-    if(key.mouse_pos.y<100)
-    for(i=0;i<10;i++){
-        max_ht -= 1;
-        if(max_ht<0){
-            max_ht = 0;
-            break;
-        }
-        map_zoom_pt.y -= -1;
-    }
-    if(key.mouse_pos.y>MAP_HEIGHT-100) 
-    for(i=0;i<10;i++){
-        max_ht += 1;
-        if(max_ht>2400-(MAP_HEIGHT)){
-            max_ht = 2400-(MAP_HEIGHT);
-            break;
-        }
-        map_zoom_pt.y += -1;
-    }
-}
+//     if(key.mouse_pos.x>MAP_WIDTH-100) 
+//     for(i=0;i<10;i++){
+//         max_wt += 1;
+//         if(max_wt>3200-(MAP_WIDTH)){
+//             max_wt = 3200-(MAP_WIDTH);
+//             break;
+//         }
+//         map_zoom_pt.x += -1;
+//     }
+//     if(key.mouse_pos.x<100)
+//     for(i=0;i<10;i++){
+//         max_wt -= 1;
+//         if(max_wt<0){
+//             max_wt =0;
+//             break;
+//         }
+//         map_zoom_pt.x -= -1;
+//     }
+//     if(key.mouse_pos.y<100)
+//     for(i=0;i<10;i++){
+//         max_ht -= 1;
+//         if(max_ht<0){
+//             max_ht = 0;
+//             break;
+//         }
+//         map_zoom_pt.y -= -1;
+//     }
+//     if(key.mouse_pos.y>MAP_HEIGHT-100) 
+//     for(i=0;i<10;i++){
+//         max_ht += 1;
+//         if(max_ht>2400-(MAP_HEIGHT)){
+//             max_ht = 2400-(MAP_HEIGHT);
+//             break;
+//         }
+//         map_zoom_pt.y += -1;
+//     }
+// }
 
 void World::run() {
     clan::GameTime game_time;
@@ -195,6 +210,33 @@ void World::update(int timeElapsed_ms) {
 void World::draw() {
     // Draw background
     clan::Rect window_rect = window.get_viewport();
+
+    clan::InputDevice mouse = window.get_ic().get_mouse();
+    if(mouse.get_x()<10){
+        max_wt -= 10;
+        if(max_wt<0){
+            max_wt =0;
+        }
+    }
+    if (mouse.get_x()>1356) {
+        max_wt += 10;
+        if(max_wt>3200-(MAP_WIDTH)){
+            max_wt = 3200-(MAP_WIDTH);
+        }
+    }
+    if(mouse.get_y()<10) {
+        max_ht -= 10;
+        if(max_ht<0){
+            max_ht = 0;
+        }
+    }
+    if (mouse.get_y()>758) {
+        max_ht += 10;
+        if(max_ht>2400-(MAP_HEIGHT)){
+            max_ht = 2400-(MAP_HEIGHT);
+        }
+    }
+
     game_map.draw(canvas, -max_wt,-max_ht);
     
     // mini_map.set_scale(0.2f, 0.2f);
