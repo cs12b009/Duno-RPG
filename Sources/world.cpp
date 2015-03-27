@@ -61,6 +61,7 @@ World::~World() {
 void World::initLevel() {
     Persona *person1 = new Persona(Persona::GEN_MAX, this);
     person1->setPos(100,100);
+    person1->currentPos(0,0);
     
     gameobjects.push_back(person1);
     persons.push_back(person1);
@@ -82,6 +83,14 @@ void World::onMouseClick(const clan::InputEvent &key) {
     
     // Left click = select
     if(key.id == clan::mouse_left) {
+
+        if(key.mouse_pos.x < 1366 - mini_map_select.get_width()/2 && key.mouse_pos.x > 1086 + mini_map_select.get_width()/2) {
+            max_wt = (key.mouse_pos.x - 1086 - mini_map_select.get_width()/2)*13;
+        }
+        if(key.mouse_pos.y < 768 - mini_map_select.get_height()/2 && key.mouse_pos.y > 558 + mini_map_select.get_height()/2) {
+            max_ht = (key.mouse_pos.y - 558 - mini_map_select.get_height()/2)*12;
+        }
+
         std::list<Persona *>::iterator it;
         for(it = persons.begin(); it != persons.end(); ++it) {
             Persona *person1 = (*it);
@@ -174,7 +183,7 @@ void World::update(int timeElapsed_ms) {
     std::list<GameObject *>::iterator it;
     for(it = gameobjects.begin(); it != gameobjects.end(); ) {
         // if update = false => delete gameobjects
-        if ((*it)->update(timeElapsed_ms) == false) {
+        if ((*it)->update(timeElapsed_ms,max_wt,max_ht) == false) {
             delete (*it);
             it = gameobjects.erase(it);
         }
@@ -186,7 +195,7 @@ void World::update(int timeElapsed_ms) {
 void World::draw() {
     // Draw background
     clan::Rect window_rect = window.get_viewport();
-    game_map.draw(canvas, map_zoom_pt.x,map_zoom_pt.y);
+    game_map.draw(canvas, -max_wt,-max_ht);
     
     // mini_map.set_scale(0.2f, 0.2f);
     mini_map.draw(canvas, 1366-mini_map.get_width(),768-mini_map.get_height());

@@ -33,6 +33,13 @@ void Persona::setPos(int x, int y) {
     collisionBody.set_translation(posX,posY);
 }
 
+void Persona::currentPos(int x, int y) {
+    currentX = (float)x;
+    currentY = (float)y;
+    
+    // collisionBody.set_translation(posX,posY);
+}
+
 void Persona::setTargetPos(int x, int y) {
     destPosX = (float)x;
     destPosY = (float)y;
@@ -69,9 +76,21 @@ bool Persona::hitCheck(int x, int y) {
             && y >= posY - height / 2 && y <= posY + height / 2);
 }
 
-bool Persona::update(int timeElapsed_ms) {
+bool Persona::update(int timeElapsed_ms, int wt, int ht) {
     spriteBody.update(timeElapsed_ms);
     
+    if(ht!=currentY) {
+       posY -= (ht-currentY);
+       destPosY -= (ht-currentY);
+        currentY=ht;
+    }
+
+    if(wt!=currentX) {
+       posX -= (wt-currentX);
+       destPosX -= (wt-currentX);
+        currentX=wt;
+    }
+
     if(destPosX != posX || destPosY != posY) {
         posX += deltaPosX * moveSpeed * timeElapsed_ms /1000;
         posY += deltaPosY * moveSpeed * timeElapsed_ms /1000;

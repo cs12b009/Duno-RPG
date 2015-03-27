@@ -23,6 +23,7 @@ public:
 public:
     void getPos(int &x, int &y);
     void setPos(int x,int y);
+    void currentPos(int x, int y);
     void setTargetPos(int x,int y);
     void select();
     void deselect();
@@ -30,7 +31,7 @@ public:
     bool hitCheck(int x,int y);
     
     virtual void draw();
-    virtual bool update(int timeElapsed_ms);
+    virtual bool update(int timeElapsed_ms, int wt, int ht);
     
 private:
     clan::Sprite spriteBody;
@@ -43,6 +44,7 @@ private:
     float posX, posY;
     float destPosX, destPosY;
     float deltaPosX, deltaPosY;
+    float currentX, currentY;
     float bodyTurnSpeed;
     float moveSpeed;
     

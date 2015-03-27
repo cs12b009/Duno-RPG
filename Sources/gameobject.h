@@ -9,7 +9,7 @@ public:
     //operations
 public:
     virtual void draw() {};
-    virtual bool update(int timeElapsed_ms) { return false; }
+    virtual bool update(int timeElapsed_ms, int wt, int ht) { return false; }
     virtual bool hitCheck(clan::CollisionOutline &outline,
                           GameObject *object) { return false; }
 protected:
