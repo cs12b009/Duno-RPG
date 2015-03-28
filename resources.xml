@@ -12,6 +12,11 @@
             <image file="Gfx/minimap_rect1.png" />
             <translation origin="center" />
         </sprite>
+        
+        <sprite name="GenBodySelected" base_angle="180">
+            <image file="Gfx/ash_selected.png" />
+            <translation origin="center" />
+        </sprite>
 
         <sprite name="GenBodyMoving" base_angle="0">
             <image file="Gfx/ash_moving1.png" />
@@ -26,13 +31,40 @@
             <image file="Gfx/ash_still1.png" />
             <translation origin="center" />
         </sprite>
+
+        <sprite name="StainerBodyMoving" base_angle="0">
+            <image file="Gfx/stainer_moving1.png" />
+            <image file="Gfx/stainer_moving2.png" />
+            <image file="Gfx/stainer_moving3.png" />
+            <image file="Gfx/stainer_moving4.png" />
+            <translation origin="center" />
+            <rotation origin="center" />
+            <animation speed="100" />
+        </sprite>
         
-        <sprite name="GenBodySelected" base_angle="180">
-            <image file="Gfx/ash_selected.png" />
+        <sprite name="StainerBodyStill" base_angle="0">
+            <image file="Gfx/stainer_still.png" />
             <translation origin="center" />
         </sprite>
      
+//-----Megaman
+
+        <sprite name="GanymedeBodyMoving" base_angle="0">
+            <image file="Gfx/gany/gany_moving1.png" />
+            <image file="Gfx/gany/gany_moving2.png" />
+            <image file="Gfx/gany/gany_moving3.png" />
+            <image file="Gfx/gany/gany_moving4.png" />
+            <image file="Gfx/gany/gany_moving5.png" />
+            <image file="Gfx/gany/gany_moving6.png" />
+            <image file="Gfx/gany/gany_moving7.png" />
+            <image file="Gfx/gany/gany_moving8.png" />
+            <image file="Gfx/gany/gany_moving9.png" />
+            <image file="Gfx/gany/gany_moving10.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+
 //-----S O U N D S
-        <sample name="Music1" file="Sound/beats1.ogg"/>
+        <sample name="Music1" file="Sound/Song.ogg"/>
 
 </resources>

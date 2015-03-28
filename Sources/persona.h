@@ -8,7 +8,8 @@ class Persona : public GameObject {
     //Each type
 public:
     enum PersonaType {
-        GEN_MAX
+        GEN_MAX,
+        STAINER
     };
     
     //init
@@ -43,7 +44,6 @@ private:
     float posX, posY;
     float destPosX, destPosY;
     float deltaPosX, deltaPosY;
-    float bodyTurnSpeed;
     float moveSpeed;
     
     bool selected;

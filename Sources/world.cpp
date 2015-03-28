@@ -59,7 +59,7 @@ World::~World() {
 }
 
 void World::initLevel() {
-    Persona *person1 = new Persona(Persona::GEN_MAX, this);
+    Persona *person1 = new Persona(Persona::STAINER, this);
     person1->setPos(100,100);
     
     gameobjects.push_back(person1);

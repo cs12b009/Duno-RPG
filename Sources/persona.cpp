@@ -16,8 +16,18 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
             collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
             collisionBody.set_alignment(clan::origin_center);
             
-            bodyTurnSpeed = 100.0f;
             moveSpeed = 100.0f;
+            
+            break;
+        case STAINER:
+            spriteBodyStill = clan::Sprite::resource(canvas, "StainerBodyStill", world->resources);
+            spriteBodyMoving = clan::Sprite::resource(canvas, "StainerBodyMoving", world->resources);
+            spriteSelected = clan::Sprite::resource(canvas, "GenBodySelected", world->resources);
+            
+            collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
+            collisionBody.set_alignment(clan::origin_center);
+            
+            moveSpeed = 50.0f;
             
             break;
     }
