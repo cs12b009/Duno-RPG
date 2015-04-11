@@ -56,6 +56,8 @@ private:
 
     std::list<GameObject *> gameobjects;
     std::list<Persona *> persons;
+    std::list<Persona *> sentinal;
+    std::list<Persona *> scourge;
     
     clan::DisplayWindow window;
     clan::Canvas canvas;

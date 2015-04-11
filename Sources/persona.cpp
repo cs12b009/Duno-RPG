@@ -7,6 +7,12 @@
 Persona::Persona(PersonaType type, World *world) : GameObject(world) {
     clan::Canvas canvas = world->get_canvas();
     
+    selected = false;
+    followStance = false;
+    hitStance = false;
+    currentPos(0,0);
+    attackRange = 100;
+    
     switch(type) {
         case GEN_MAX:
             spriteBodyStill = clan::Sprite::resource(canvas, "GenBodyStill", world->resources);
@@ -30,9 +36,19 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
             moveSpeed = 50.0f;
             
             break;
+        case GANYMEDE:
+            spriteBodyStill = clan::Sprite::resource(canvas, "GanymedeBodyStill", world->resources);
+            spriteBodyMoving = clan::Sprite::resource(canvas, "GanymedeBodyMoving", world->resources);
+            spriteSelected = clan::Sprite::resource(canvas, "GenBodySelected", world->resources);
+            spriteAttack = clan::Sprite::resource(canvas, "GanymedeBodyAttacking", world->resources);
+            
+            collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
+            collisionBody.set_alignment(clan::origin_center);
+            
+            moveSpeed = 80.0f;
+            attackRange = 300;
     }
     
-    selected = false;
     spriteBody = spriteBodyStill;
 }
 
@@ -41,6 +57,18 @@ void Persona::setPos(int x, int y) {
     posY = destPosY = (float)y;
     
     collisionBody.set_translation(posX,posY);
+}
+
+void Persona::getPos(int &x, int &y) {
+    x = posX;
+    y = posY;
+}
+
+void Persona::currentPos(int x, int y) {
+    currentX = (float)x;
+    currentY = (float)y;
+    
+    // collisionBody.set_translation(posX,posY);
 }
 
 void Persona::setTargetPos(int x, int y) {
@@ -55,8 +83,29 @@ void Persona::setTargetPos(int x, int y) {
     spriteBody = spriteBodyMoving;
 }
 
+void Persona::setTargetPos(GameObject *other) {
+    followStance = true;
+    followObj = other;
+}
+
+void Persona::hitTarget(GameObject *other) {
+    spriteBody = spriteAttack;
+    hitStance = true;
+}
+
 bool Persona::isSelected() const {
     return selected;
+}
+
+bool Persona::enemyCheck(GameObject *other) {
+    Persona *p1 = (Persona*) other;
+    if((p1->sentinal && sentinal) || (!sentinal && !p1->sentinal))
+        return false;
+    return true;
+}
+
+void Persona::clearFollow() {
+    followStance = false;
 }
 
 void Persona::select() {
@@ -79,8 +128,45 @@ bool Persona::hitCheck(int x, int y) {
             && y >= posY - height / 2 && y <= posY + height / 2);
 }
 
-bool Persona::update(int timeElapsed_ms) {
+bool Persona::update(int timeElapsed_ms, int wt, int ht) {
     spriteBody.update(timeElapsed_ms);
+    int x,y;
+    
+    if(ht!=currentY) {
+       posY -= (ht-currentY);
+       destPosY -= (ht-currentY);
+        currentY=ht;
+    }
+
+    if(wt!=currentX) {
+       posX -= (wt-currentX);
+       destPosX -= (wt-currentX);
+        currentX=wt;
+    }
+
+    if(hitStance && spriteAttack.is_looping()) {
+        hitStance = false;      //end hit stance start follow stance
+        followStance = true;
+    }
+    
+    if(followStance) {
+        followObj->getPos(x,y);
+        clan::Vec2f vector(posX-x,posY-y);
+        if(vector.length() < attackRange+1) {
+            if(!enemyCheck(followObj))
+                followStance = false;
+            else {
+                hitTarget(followObj);
+                destPosX = posX; destPosY = posY;
+                followStance = false;
+            }
+        }
+        else {
+            vector.normalize();
+            setTargetPos( x + (attackRange*vector.x),
+                          y + (attackRange*vector.y));
+        }
+    }
     
     if(destPosX != posX || destPosY != posY) {
         posX += deltaPosX * moveSpeed * timeElapsed_ms /1000;

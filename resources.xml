@@ -47,23 +47,38 @@
             <translation origin="center" />
         </sprite>
      
-//-----Megaman
+//-----Ganymede
 
-        <sprite name="GanymedeBodyMoving" base_angle="0">
-            <image file="Gfx/gany/gany_moving1.png" />
-            <image file="Gfx/gany/gany_moving2.png" />
-            <image file="Gfx/gany/gany_moving3.png" />
-            <image file="Gfx/gany/gany_moving4.png" />
-            <image file="Gfx/gany/gany_moving5.png" />
-            <image file="Gfx/gany/gany_moving6.png" />
-            <image file="Gfx/gany/gany_moving7.png" />
-            <image file="Gfx/gany/gany_moving8.png" />
-            <image file="Gfx/gany/gany_moving9.png" />
-            <image file="Gfx/gany/gany_moving10.png" />
+        <sprite name="GanymedeBodyAttacking" base_angle="0">
+            <image file="Gfx/gany/gany_attack1.png" />
+            <image file="Gfx/gany/gany_attack2.png" />
+            <image file="Gfx/gany/gany_attack3.png" />
+            <image file="Gfx/gany/gany_attack4.png" />
+            <image file="Gfx/gany/gany_attack5.png" />
+            <image file="Gfx/gany/gany_attack6.png" />
+            <image file="Gfx/gany/gany_attack7.png" />
+            <image file="Gfx/gany/gany_attack8.png" />
+            <image file="Gfx/gany/gany_attack9.png" />
+            <image file="Gfx/gany/gany_attack10.png" />
+            <image file="Gfx/gany/gany_attack11.png" />
             <translation origin="center" />
             <animation speed="100" />
         </sprite>
 
+        <sprite name="GanymedeBodyMoving" base_angle="0">
+            <image file="Gfx/gany/gany_moving1.png" />
+            <image file="Gfx/gany/gany_moving2.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        <sprite name="GanymedeBodyStill" base_angle="0">
+            <image file="Gfx/gany/gany_still1.png" />
+            <image file="Gfx/gany/gany_still2.png" />
+            <translation origin="center" />
+            <animation speed="1" />
+        </sprite>
+     
 //-----S O U N D S
         <sample name="Music1" file="Sound/Song.ogg"/>
 
