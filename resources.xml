@@ -8,6 +8,11 @@
                 <image file="Gfx/minimap.png"/>
         </image>
 
+        <sprite name="minidot" base_angle="0">
+                <image file="Gfx/dot.png"/>
+                <translation origin="center" />
+        </sprite>
+
         <sprite name="MiniMapSelect" base_angle="0">
             <image file="Gfx/minimap_rect1.png" />
             <translation origin="center" />

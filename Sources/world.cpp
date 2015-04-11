@@ -34,6 +34,9 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
     //Mini-map Select
     mini_map_select = clan::Sprite::resource(canvas, "MiniMapSelect", resources);
 
+    //Mini-map dot
+    mini_dot = clan::Sprite::resource(canvas,"minidot",resources);
+
     map_zoom_pt.x = 0;
     map_zoom_pt.y = 0;
     // Recieve mouse clicks
@@ -212,10 +215,15 @@ void World::draw() {
     // mini_map_select.set_scale(0.05f,0.05f);
     mini_map_select.draw(canvas,1366 - mini_map.get_width() + mini_map_select.get_width()/2 + max_wt/13 , 768 - mini_map.get_height() + mini_map_select.get_height()/2 + max_ht/12);
 
+
+
     // Draw all gameobjects
     std::list<GameObject *>::iterator it;
-    for(it = gameobjects.begin(); it != gameobjects.end(); ++it)
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it){
         (*it)->draw();
+        (*it)->getPos(xPos,yPos);
+        mini_dot.draw(canvas,1366 - mini_map.get_width() + xPos/13 + max_wt/13, 768 - mini_map.get_height() + yPos/12 + max_ht/12);
+    }
     
     
     canvas.flush();

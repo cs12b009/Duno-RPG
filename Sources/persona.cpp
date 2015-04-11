@@ -46,7 +46,7 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
             collisionBody.set_alignment(clan::origin_center);
             
             moveSpeed = 80.0f;
-            attackRange = 300;
+            attackRange = 30;
     }
     
     spriteBody = spriteBodyStill;

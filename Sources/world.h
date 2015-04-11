@@ -44,8 +44,12 @@ private:
     clan::Image game_map;
     clan::Image mini_map;
     clan::Sprite mini_map_select;
+    clan::Sprite mini_dot;
     clan::Point map_zoom_pt;
     
+    int xPos;
+    int yPos;
+
     bool dragging;
     bool mouseDown;
     clan::Rect dragArea;
