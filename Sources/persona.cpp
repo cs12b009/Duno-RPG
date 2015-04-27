@@ -15,6 +15,14 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
     currentPos(0,0);
     attackRange = 100;
     heroType = type;
+    maxHealth = health = 1000;
+    maxMana = mana = 500;
+    damage = 100;
+    
+    HealthBar = clan::Image::resource(canvas, "Health", world->resources);
+    Health = clan::Image::resource(canvas, "health", world->resources);
+    ManaBar = clan::Image::resource(canvas, "Health", world->resources);
+    Mana = clan::Image::resource(canvas, "mana", world->resources);
     
     switch(type) {
         case GEN_MAX:
@@ -109,6 +117,10 @@ void Persona::setTargetPos(GameObject *other) {
     followObj = other;
 }
 
+void Persona::reduceHealth(int x) {
+    health -= x;
+}
+
 void Persona::hitTarget(GameObject *other) {
     int x,y;
     other->getPos(x,y);
@@ -122,6 +134,7 @@ void Persona::hitTarget(GameObject *other) {
         missile->setAngle(x,y);
         world->addGameObject(missile);
     }
+    other->reduceHealth(damage);
 }
 
 bool Persona::isSelected() const {
@@ -224,6 +237,18 @@ void Persona::draw() {
     
     if(selected)
         spriteSelected.draw(canvas, posX, posY);
+        
+    //Health Bar
+    HealthBar.draw(canvas, posX-HealthBar.get_width()/2, posY - 30);
+    ManaBar.draw(canvas, posX-ManaBar.get_width()/2, posY - 40);
+    float len = ((float)health/maxHealth)*HealthBar.get_width();
+    for(int i = 0; i < (int)len; i++){
+    	Health.draw(canvas, posX-HealthBar.get_width()/2 + i, posY - 31);
+    }
+    len = ((float)mana/maxMana)*ManaBar.get_width();
+    for(int i = 0; i < len; i++){
+    	Mana.draw(canvas, posX - ManaBar.get_width()/2 + i, posY - 41);
+    }
     
     //shadow for body
     canvas.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);

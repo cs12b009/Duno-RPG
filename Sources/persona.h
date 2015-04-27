@@ -1,4 +1,3 @@
-
 #pragma once
 #include "gameobject.h"
 
@@ -30,6 +29,7 @@ public:
     void setPos(int x,int y);
     void currentPos(int x, int y);
     void setTargetPos(int x,int y);
+    void reduceHealth(int x);
     void setTargetPos(GameObject *other);
     void hitTarget(GameObject *other);
     bool enemyCheck(GameObject *other);
@@ -66,6 +66,11 @@ private:
 
     //Attributes hidden
 private:
+    clan::Image HealthBar;
+    clan::Image Health;
+    clan::Image ManaBar;
+    clan::Image Mana;
+
     clan::Sprite spriteBody;
     clan::Sprite spriteBodyStill;
     clan::Sprite spriteBodyMoving;
