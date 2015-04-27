@@ -9,7 +9,10 @@ public:
     //operations
 public:
     virtual void draw() {};
-    virtual bool update(int timeElapsed_ms) { return false; }
+    virtual void getPos(int &x, int &y) {};
+    virtual void setPos(int x,int y) {};
+    virtual void reduceHealth(int x) {};
+    virtual bool update(int timeElapsed_ms, int wt, int ht) { return false; }
     virtual bool hitCheck(clan::CollisionOutline &outline,
                           GameObject *object) { return false; }
 protected:

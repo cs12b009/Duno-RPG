@@ -43,9 +43,17 @@ private:
     
     clan::Image game_map;
     clan::Image mini_map;
+    clan::Image ability1;
+    clan::Image ability2;
+    clan::Image ability3;
+    clan::Image ability4;
     clan::Sprite mini_map_select;
+    clan::Sprite mini_dot;
     clan::Point map_zoom_pt;
     
+    int xPos;
+    int yPos;
+
     bool dragging;
     bool mouseDown;
     clan::Rect dragArea;
@@ -56,6 +64,8 @@ private:
 
     std::list<GameObject *> gameobjects;
     std::list<Persona *> persons;
+    std::list<Persona *> sentinal;
+    std::list<Persona *> scourge;
     
     clan::DisplayWindow window;
     clan::Canvas canvas;

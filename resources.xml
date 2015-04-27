@@ -8,8 +8,46 @@
                 <image file="Gfx/minimap.png"/>
         </image>
 
+        <sprite name="minidot" base_angle="0">
+                <image file="Gfx/dot.png"/>
+                <translation origin="center" />
+        </sprite>
+
         <sprite name="MiniMapSelect" base_angle="0">
             <image file="Gfx/minimap_rect1.png" />
+            <translation origin="center" />
+        </sprite>
+        
+        <image name = "ability1">
+        	<image file = "Gfx/Spells/spell1.png"/>
+        </image>
+        
+        <image name = "ability2">
+        	<image file = "Gfx/Spells/spell2.png"/>
+        </image>
+        
+        <image name = "ability3">
+        	<image file = "Gfx/Spells/spell3.png"/>
+        </image>
+        
+        <image name = "ability4">
+        	<image file = "Gfx/Spells/spell4.png"/>
+        </image>
+        
+        <image name = "Health">
+        	<image file = "Gfx/test.png"/>
+        </image>
+        
+        <image name = "health">
+        	<image file = "Gfx/health.png"/>
+       	</image>
+       	
+       	<image name = "mana">
+       		<image file = "Gfx/mana.png"/>
+      	</image>	
+        
+        <sprite name="GenBodySelected" base_angle="180">
+            <image file="Gfx/ash_selected.png" />
             <translation origin="center" />
         </sprite>
 
@@ -26,13 +64,55 @@
             <image file="Gfx/ash_still1.png" />
             <translation origin="center" />
         </sprite>
+
+        <sprite name="StainerBodyMoving" base_angle="0">
+            <image file="Gfx/stainer_moving1.png" />
+            <image file="Gfx/stainer_moving2.png" />
+            <image file="Gfx/stainer_moving3.png" />
+            <image file="Gfx/stainer_moving4.png" />
+            <translation origin="center" />
+            <rotation origin="center" />
+            <animation speed="100" />
+        </sprite>
         
-        <sprite name="GenBodySelected" base_angle="180">
-            <image file="Gfx/ash_selected.png" />
+        <sprite name="StainerBodyStill" base_angle="0">
+            <image file="Gfx/stainer_still.png" />
             <translation origin="center" />
         </sprite>
      
+//-----Ganymede
+
+        <sprite name="GanymedeBodyAttacking" base_angle="0">
+            <image file="Gfx/gany/gany_attack1.png" />
+            <image file="Gfx/gany/gany_attack2.png" />
+            <image file="Gfx/gany/gany_attack3.png" />
+            <image file="Gfx/gany/gany_attack4.png" />
+            <image file="Gfx/gany/gany_attack5.png" />
+            <image file="Gfx/gany/gany_attack6.png" />
+            <image file="Gfx/gany/gany_attack7.png" />
+            <image file="Gfx/gany/gany_attack8.png" />
+            <image file="Gfx/gany/gany_attack9.png" />
+            <image file="Gfx/gany/gany_attack10.png" />
+            <image file="Gfx/gany/gany_attack11.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+
+        <sprite name="GanymedeBodyMoving" base_angle="0">
+            <image file="Gfx/gany/gany_moving1.png" />
+            <image file="Gfx/gany/gany_moving2.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        <sprite name="GanymedeBodyStill" base_angle="0">
+            <image file="Gfx/gany/gany_still1.png" />
+            <image file="Gfx/gany/gany_still2.png" />
+            <translation origin="center" />
+            <animation speed="1" />
+        </sprite>
+     
 //-----S O U N D S
-        <sample name="Music1" file="Sound/beats1.ogg"/>
+        <sample name="Music1" file="Sound/Song.ogg"/>
 
 </resources>

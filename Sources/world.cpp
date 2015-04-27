@@ -9,6 +9,9 @@
 
 int max_ht=0;
 int max_wt = 0;
+
+float w_ratio;
+float h_ratio;
     
 World::World(clan::DisplayWindow &display_window) : window(display_window), quit(false) {
     
@@ -34,15 +37,26 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
     //Mini-map Select
     mini_map_select = clan::Sprite::resource(canvas, "MiniMapSelect", resources);
 
+    //Mini-map dot
+    mini_dot = clan::Sprite::resource(canvas,"minidot",resources);
+    
+    //Abilities
+    ability1 = clan::Image::resource(canvas, "ability1", resources);
+    ability2 = clan::Image::resource(canvas, "ability2", resources);
+    ability3 = clan::Image::resource(canvas, "ability3", resources);
+    ability4 = clan::Image::resource(canvas, "ability4", resources);
+
     map_zoom_pt.x = 0;
     map_zoom_pt.y = 0;
+    w_ratio = (float)game_map.get_width()/mini_map.get_width();
+    h_ratio = (float)game_map.get_height()/mini_map.get_height();
     // Recieve mouse clicks
     /*slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
     slotMouseDown = window.get_ic().get_mouse().sig_key_down().connect(this, &World::onMouseDown);
     slotMouseDblClick = window.get_ic().get_mouse().sig_key_dblclk().connect(this, &World::onMouseDown); */
 
     slotMouseUp = window.get_ic().get_mouse().sig_key_up().connect(this, &World::onMouseClick);
-    slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
+    // slotMouseMove = window.get_ic().get_mouse().sig_pointer_move().connect(this, &World::onMouseMove);
     
     // Initi game_map - add_gameobjects etc 
     initLevel();
@@ -59,11 +73,19 @@ World::~World() {
 }
 
 void World::initLevel() {
-    Persona *person1 = new Persona(Persona::GEN_MAX, this);
+    Persona *person1 = new Persona(Persona::STAINER, this);
     person1->setPos(100,100);
+    Persona *person2 = new Persona(Persona::GANYMEDE, this);
+    person2->setPos(150,150);
     
     gameobjects.push_back(person1);
     persons.push_back(person1);
+    sentinal.push_back(person1);
+    person1->sentinal = true;
+    gameobjects.push_back(person2);
+    persons.push_back(person2);
+    scourge.push_back(person2);
+    person2->sentinal = false;
 }
 
 // Clicking on units
@@ -75,13 +97,49 @@ void World::onMouseClick(const clan::InputEvent &key) {
             Persona *person1 = (*it);
             
             // Change destination for selected persons
-            if(person1->isSelected())
-                person1->setTargetPos(key.mouse_pos.x, key.mouse_pos.y);
+            if(person1->isSelected()) {
+            	if(!(key.mouse_pos.x < 1366  && key.mouse_pos.x > 1086 && key.mouse_pos.y < 768  && key.mouse_pos.y > 558)){
+		        person1->clearFollow();
+		        person1->setTargetPos(key.mouse_pos.x, key.mouse_pos.y);
+		        std::list<Persona *>::iterator it2;
+		        for(it2 = persons.begin(); it2 != persons.end(); ++it2)
+		            if((*it2)->hitCheck(key.mouse_pos.x, key.mouse_pos.y)) {
+		                person1->setTargetPos((*it2));
+		            }
+                }
+                else{
+                	person1->clearFollow();
+                	float x_c = (((float)(key.mouse_pos.x - 1086))/mini_map.get_width())*game_map.get_width();
+                	int y_c = (((float)(key.mouse_pos.y - 558))/mini_map.get_height())*game_map.get_height();
+		        person1->setTargetPos(x_c-max_wt, y_c-max_ht);
+                }
+            }
         }
     }
     
     // Left click = select
     if(key.id == clan::mouse_left) {
+
+        if(key.mouse_pos.x < 1366  && key.mouse_pos.x > 1086 && key.mouse_pos.y < 768  && key.mouse_pos.y > 558 ) {
+            if(key.mouse_pos.x < 1086 + mini_map_select.get_width()/2){
+                max_wt=0;
+            }else if (key.mouse_pos.x > 1366 - mini_map_select.get_width()/2)
+            {
+                max_wt=1836;
+            }else{
+                max_wt = (key.mouse_pos.x - 1086 - mini_map_select.get_width()/2)*13;
+            }
+            if (key.mouse_pos.y > 768 - mini_map_select.get_height()/2)
+            {
+                max_ht=1600;
+            }else if (key.mouse_pos.y < 558 + mini_map_select.get_height()/2)
+            {
+                max_ht=0;
+            }else{
+                max_ht = (key.mouse_pos.y - 558 - mini_map_select.get_height()/2)*12;
+            }
+        }
+
         std::list<Persona *>::iterator it;
         for(it = persons.begin(); it != persons.end(); ++it) {
             Persona *person1 = (*it);
@@ -94,53 +152,6 @@ void World::onMouseClick(const clan::InputEvent &key) {
                 person1->select();
         }
 
-        //Select Mini-map-select ,when clicked on Mini-map 
-        // if(mini_map.hitCheck(key.mouse_pos.x, key.mouse_pos.y)){
-        // 	mini_map_select->select();
-        // }
-
-    }
-}
-
-// Change map view on window
-void World::onMouseMove(const clan::InputEvent &key) {
-    int i;
-    
-    if(key.mouse_pos.x>MAP_WIDTH-100) 
-    for(i=0;i<10;i++){
-        max_wt += 1;
-        if(max_wt>3200-(MAP_WIDTH)){
-            max_wt = 3200-(MAP_WIDTH);
-            break;
-        }
-        map_zoom_pt.x += -1;
-    }
-    if(key.mouse_pos.x<100)
-    for(i=0;i<10;i++){
-        max_wt -= 1;
-        if(max_wt<0){
-            max_wt =0;
-            break;
-        }
-        map_zoom_pt.x -= -1;
-    }
-    if(key.mouse_pos.y<100)
-    for(i=0;i<10;i++){
-        max_ht -= 1;
-        if(max_ht<0){
-            max_ht = 0;
-            break;
-        }
-        map_zoom_pt.y -= -1;
-    }
-    if(key.mouse_pos.y>MAP_HEIGHT-100) 
-    for(i=0;i<10;i++){
-        max_ht += 1;
-        if(max_ht>2400-(MAP_HEIGHT)){
-            max_ht = 2400-(MAP_HEIGHT);
-            break;
-        }
-        map_zoom_pt.y += -1;
     }
 }
 
@@ -148,7 +159,7 @@ void World::run() {
     clan::GameTime game_time;
     // ----  Music
     clan::SoundBuffer music = clan::SoundBuffer::resource("Music1",resources);
-    music.set_volume(0.8f);
+    music.set_volume(0.3f);
     
     clan::SoundBuffer_Session music_session = music.prepare();
     
@@ -174,32 +185,68 @@ void World::update(int timeElapsed_ms) {
     std::list<GameObject *>::iterator it;
     for(it = gameobjects.begin(); it != gameobjects.end(); ) {
         // if update = false => delete gameobjects
-        if ((*it)->update(timeElapsed_ms) == false) {
+        if ((*it)->update(timeElapsed_ms,max_wt,max_ht) == false) {
             delete (*it);
             it = gameobjects.erase(it);
         }
         else
-            ++it; //TODO
+            ++it;
     }
 }
 
 void World::draw() {
     // Draw background
     clan::Rect window_rect = window.get_viewport();
-    game_map.draw(canvas, map_zoom_pt.x,map_zoom_pt.y);
+
+    clan::InputDevice mouse = window.get_ic().get_mouse();
+    if(mouse.get_x()<10){
+        max_wt -= 10;
+        if(max_wt<0){
+            max_wt =0;
+        }
+    }
+    if (mouse.get_x()>1356) {
+        max_wt += 10;
+        if(max_wt>3200-(MAP_WIDTH)){
+            max_wt = 3200-(MAP_WIDTH);
+        }
+    }
+    if(mouse.get_y()<10) {
+        max_ht -= 10;
+        if(max_ht<0){
+            max_ht = 0;
+        }
+    }
+    if (mouse.get_y()>758) {
+        max_ht += 10;
+        if(max_ht>2400-(MAP_HEIGHT)){
+            max_ht = 2400-(MAP_HEIGHT);
+        }
+    }
+
+    game_map.draw(canvas, -max_wt,-max_ht);
     
     // mini_map.set_scale(0.2f, 0.2f);
     mini_map.draw(canvas, 1366-mini_map.get_width(),768-mini_map.get_height());
+    ability1.draw(canvas, 0*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
+    ability2.draw(canvas, 1*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
+    ability3.draw(canvas, 2*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
+    ability4.draw(canvas, 3*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
+    
 
     // mini_map_select.set_scale(0.05f,0.05f);
     mini_map_select.draw(canvas,1366 - mini_map.get_width() + mini_map_select.get_width()/2 + max_wt/13 , 768 - mini_map.get_height() + mini_map_select.get_height()/2 + max_ht/12);
 
+
+
     // Draw all gameobjects
     std::list<GameObject *>::iterator it;
-    for(it = gameobjects.begin(); it != gameobjects.end(); ++it)
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it){
         (*it)->draw();
+        (*it)->getPos(xPos,yPos);
+        mini_dot.draw(canvas,1366 - mini_map.get_width() + (int)((float)(xPos + max_wt)/(w_ratio)), 768 - mini_map.get_height() + (int)((float)(yPos + max_ht)/(h_ratio)));
+    }
     
-    // TODO view boxes and map dragging should be somewhere here
     
     canvas.flush();
 }
