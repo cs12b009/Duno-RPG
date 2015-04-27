@@ -97,7 +97,7 @@ void Persona::setTargetPos(GameObject *other) {
 }
 
 void Persona::reduceHealth(int x) {
-    health -= 100;
+    health -= x;
 }
 
 void Persona::hitTarget(GameObject *other) {

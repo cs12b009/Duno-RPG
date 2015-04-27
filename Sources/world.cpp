@@ -245,6 +245,7 @@ void World::draw() {
         (*it)->draw();
         (*it)->getPos(xPos,yPos);
         mini_dot.draw(canvas,1366 - mini_map.get_width() + (int)((float)(xPos + max_wt)/(w_ratio)), 768 - mini_map.get_height() + (int)((float)(yPos + max_ht)/(h_ratio)));
+
     }
     
     
