@@ -21,6 +21,8 @@ public:
 public:
     bool isSelected() const;
     bool sentinal;
+    bool isRange;
+    PersonaType heroType;
     
     //Operations
 public:
@@ -34,7 +36,7 @@ public:
     void select();
     void deselect();
     void clearFollow();
-    bool hitCheck(clan::CollisionOutline &outline, GameObject *other);
+    bool hitCheck(clan::CollisionOutline &outline);
     bool hitCheck(int x,int y);
     
     virtual void draw();
@@ -67,6 +69,9 @@ private:
     clan::Sprite spriteBody;
     clan::Sprite spriteBodyStill;
     clan::Sprite spriteBodyMoving;
+    clan::Sprite spriteBodyMovingLeft;
+    clan::Sprite spriteBodyMovingUp;
+    clan::Sprite spriteBodyMovingDown;
     clan::Sprite spriteSelected;
     clan::Sprite spriteAttack;
     

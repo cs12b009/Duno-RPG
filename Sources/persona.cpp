@@ -3,6 +3,7 @@
 
 #include "persona.h"
 #include "world.h"
+#include "missile.h"
 
 Persona::Persona(PersonaType type, World *world) : GameObject(world) {
     clan::Canvas canvas = world->get_canvas();
@@ -10,13 +11,16 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
     selected = false;
     followStance = false;
     hitStance = false;
+    isRange = false;
     currentPos(0,0);
     attackRange = 100;
+    heroType = type;
     
     switch(type) {
         case GEN_MAX:
             spriteBodyStill = clan::Sprite::resource(canvas, "GenBodyStill", world->resources);
-            spriteBodyMoving = clan::Sprite::resource(canvas, "GenBodyMoving", world->resources);
+            spriteBodyMovingLeft = spriteBodyMovingUp = spriteBodyMovingDown = 
+                spriteBodyMoving = clan::Sprite::resource(canvas, "GenBodyMoving", world->resources);
             spriteSelected = clan::Sprite::resource(canvas, "GenBodySelected", world->resources);
             
             collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
@@ -27,26 +31,34 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
             break;
         case STAINER:
             spriteBodyStill = clan::Sprite::resource(canvas, "StainerBodyStill", world->resources);
-            spriteBodyMoving = clan::Sprite::resource(canvas, "StainerBodyMoving", world->resources);
+            spriteBodyMovingLeft = spriteBodyMoving = clan::Sprite::resource(canvas, "StainerBodyMoving", world->resources);
             spriteSelected = clan::Sprite::resource(canvas, "GenBodySelected", world->resources);
+            spriteAttack = clan::Sprite::resource(canvas, "StainerBodyAttacking", world->resources);
+            spriteBodyMovingLeft = clan::Sprite::resource(canvas, "StainerBodyMovingLeft", world->resources);
+            spriteBodyMovingUp = clan::Sprite::resource(canvas, "StainerBodyMovingUp", world->resources);
+            spriteBodyMovingDown = clan::Sprite::resource(canvas, "StainerBodyMovingDown", world->resources);
             
             collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
             collisionBody.set_alignment(clan::origin_center);
+            isRange = true;
             
             moveSpeed = 50.0f;
+            attackRange = 200;
             
             break;
         case GANYMEDE:
             spriteBodyStill = clan::Sprite::resource(canvas, "GanymedeBodyStill", world->resources);
-            spriteBodyMoving = clan::Sprite::resource(canvas, "GanymedeBodyMoving", world->resources);
+            spriteBodyMovingLeft = spriteBodyMovingUp = spriteBodyMovingDown = 
+                spriteBodyMoving = clan::Sprite::resource(canvas, "GanymedeBodyMoving", world->resources);
             spriteSelected = clan::Sprite::resource(canvas, "GenBodySelected", world->resources);
             spriteAttack = clan::Sprite::resource(canvas, "GanymedeBodyAttacking", world->resources);
             
-            collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
+            collisionBody = clan::CollisionOutline("Gfx/gany/gany_still1.png");
             collisionBody.set_alignment(clan::origin_center);
+            isRange = false;
             
             moveSpeed = 80.0f;
-            attackRange = 300;
+            attackRange = 30;
     }
     
     spriteBody = spriteBodyStill;
@@ -80,7 +92,16 @@ void Persona::setTargetPos(int x, int y) {
     vector.normalize();
     deltaPosX = -vector.x;
     deltaPosY = -vector.y;
-    spriteBody = spriteBodyMoving;
+    if(deltaPosX <0.4 && deltaPosX >-0.4) {
+        if(deltaPosY >0)
+            spriteBody = spriteBodyMovingDown;
+        else
+            spriteBody = spriteBodyMovingUp;
+    }
+    else if(deltaPosX<0)
+        spriteBody = spriteBodyMovingLeft;
+    else
+        spriteBody = spriteBodyMoving;
 }
 
 void Persona::setTargetPos(GameObject *other) {
@@ -89,8 +110,18 @@ void Persona::setTargetPos(GameObject *other) {
 }
 
 void Persona::hitTarget(GameObject *other) {
-    spriteBody = spriteAttack;
+    int x,y;
+    other->getPos(x,y);
+    
     hitStance = true;
+    if(!isRange)        // meele attacks
+        spriteBody = spriteAttack;
+    else {
+        Missile *missile = new Missile(heroType,followObj,world);
+        missile->setPos(posX,posY);
+        missile->setAngle(x,y);
+        world->addGameObject(missile);
+    }
 }
 
 bool Persona::isSelected() const {
@@ -116,7 +147,7 @@ void Persona::deselect() {
     selected = false;
 }
 
-bool Persona::hitCheck(clan::CollisionOutline &outline, GameObject *other) {
+bool Persona::hitCheck(clan::CollisionOutline &outline) {
     return collisionBody.collide(outline);
 }
 
@@ -147,6 +178,9 @@ bool Persona::update(int timeElapsed_ms, int wt, int ht) {
     if(hitStance && spriteAttack.is_looping()) {
         hitStance = false;      //end hit stance start follow stance
         followStance = true;
+        if(isRange) {
+
+        }
     }
     
     if(followStance) {

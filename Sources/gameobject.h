@@ -12,8 +12,7 @@ public:
     virtual void getPos(int &x, int &y) {};
     virtual void setPos(int x,int y) {};
     virtual bool update(int timeElapsed_ms, int wt, int ht) { return false; }
-    virtual bool hitCheck(clan::CollisionOutline &outline,
-                          GameObject *object) { return false; }
+    virtual bool hitCheck(clan::CollisionOutline &outline) { return false; }
 protected:
     World *world;
 };

@@ -74,6 +74,10 @@ void World::initLevel() {
     person2->sentinal = false;
 }
 
+void World::addGameObject(GameObject *obj) {
+    gameobjects.push_back(obj);
+}
+
 // Clicking on units
 void World::onMouseClick(const clan::InputEvent &key) {
     // Right click = move or attack
@@ -214,8 +218,9 @@ void World::draw() {
 
     // Draw all gameobjects
     std::list<GameObject *>::iterator it;
-    for(it = gameobjects.begin(); it != gameobjects.end(); ++it)
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it) {
         (*it)->draw();
+    }
     
     
     canvas.flush();
