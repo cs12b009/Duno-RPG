@@ -19,7 +19,7 @@ int App::main(const std::vector<std::string> &args) {
     World world(window);
     
     // Run the main loop
-    world.run();
+    //world.run();
     
     return 0;
 }

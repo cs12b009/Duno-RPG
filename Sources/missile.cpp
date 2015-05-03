@@ -17,6 +17,7 @@ Missile::Missile(int type, GameObject *other, World *world) : GameObject(world) 
             spriteMissile = clan::Sprite::resource(canvas, "Missile", world->resources);
             range = 300;
             speed = 500.0f;
+            damage = 100;
             break;
             
     }
@@ -74,6 +75,7 @@ bool Missile::update(int timeElapsed_ms, int wt, int ht) {
         move(speed * timeElapsed);
         if(attackObj->hitCheck(collisionMissile)) {
             //sound?
+            attackObj->reduceHealth(damage);
             sprite = spriteExplosion;
             sprite.set_angle(clan::Angle(0, clan::angle_degrees));
             sprite.set_alpha(0.85f);

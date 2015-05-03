@@ -2,7 +2,6 @@
 
 #include <list>
 
-class Surface;
 class GameObject;
 class Persona;
 
@@ -62,7 +61,6 @@ private:
     //Sounds
     clan::SoundBuffer_Session *music_session_;
 
-    std::list<GameObject *> gameobjects;
     std::list<Persona *> persons;
     std::list<Persona *> sentinal;
     std::list<Persona *> scourge;
@@ -73,6 +71,7 @@ private:
     bool quit;
     
 public:
+    std::list<GameObject *> gameobjects;
     clan::BlendState blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha;
     clan::BlendState blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha;
     clan::BlendState blendstate_default;

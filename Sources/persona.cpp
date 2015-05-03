@@ -12,6 +12,7 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
     followStance = false;
     hitStance = false;
     isRange = false;
+    thepointer = 0;
     currentPos(0,0);
     attackRange = 100;
     heroType = type;
@@ -46,7 +47,7 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
             spriteBodyMovingUp = clan::Sprite::resource(canvas, "StainerBodyMovingUp", world->resources);
             spriteBodyMovingDown = clan::Sprite::resource(canvas, "StainerBodyMovingDown", world->resources);
             
-            collisionBody = clan::CollisionOutline("Gfx/ash_selected.png");
+            collisionBody = clan::CollisionOutline("Gfx/stainer/stainer_still.png");
             collisionBody.set_alignment(clan::origin_center);
             isRange = true;
             
@@ -66,7 +67,7 @@ Persona::Persona(PersonaType type, World *world) : GameObject(world) {
             isRange = false;
             
             moveSpeed = 80.0f;
-            attackRange = 30;
+            attackRange = 50;
     }
     
     spriteBody = spriteBodyStill;
@@ -134,7 +135,6 @@ void Persona::hitTarget(GameObject *other) {
         missile->setAngle(x,y);
         world->addGameObject(missile);
     }
-    other->reduceHealth(damage);
 }
 
 bool Persona::isSelected() const {
@@ -143,7 +143,7 @@ bool Persona::isSelected() const {
 
 bool Persona::enemyCheck(GameObject *other) {
     Persona *p1 = (Persona*) other;
-    if((p1->sentinal && sentinal) || (!sentinal && !p1->sentinal))
+    if((p1->sentinal && sentinal) || (p1->scourge  && scourge))
         return false;
     return true;
 }
@@ -175,7 +175,29 @@ bool Persona::hitCheck(int x, int y) {
 bool Persona::update(int timeElapsed_ms, int wt, int ht) {
     spriteBody.update(timeElapsed_ms);
     int x,y;
-    
+    int tempx,tempy,temp2x,temp2y;
+    int flag=0,flag1=0;
+    std::list<GameObject *>::iterator it;
+    for(it = world->gameobjects.begin(); it != world->gameobjects.end(); ++it)
+    {
+      
+      if((*it)->hitCheck(this->collisionBody) && (*it)!=this  && thepointer==0 )
+        {       
+          thepointer=1;
+          collisionBody.set_translation(posX,posY);
+          //this->setTargetPos(key.mouse_pos.x, key.mouse_pos.y);
+          destPosY=posY;
+          destPosX=posX;
+          spriteBody = spriteBodyStill;
+
+          return true;
+        }
+    }
+    tempx=posX;
+    tempy=posY;
+    temp2x=destPosX;
+    temp2y=destPosY;
+ 
     if(ht!=currentY) {
        posY -= (ht-currentY);
        destPosY -= (ht-currentY);
@@ -191,6 +213,7 @@ bool Persona::update(int timeElapsed_ms, int wt, int ht) {
     if(hitStance && spriteAttack.is_looping()) {
         hitStance = false;      //end hit stance start follow stance
         followStance = true;
+        followObj->reduceHealth(damage);
         if(isRange) {
 
         }
@@ -225,10 +248,27 @@ bool Persona::update(int timeElapsed_ms, int wt, int ht) {
             posX = destPosX;
             posY = destPosY;
         }
-        collisionBody.set_translation(posX,posY);
+        
         if(posX == destPosX && posY == destPosY)
             spriteBody = spriteBodyStill;
     }
+    collisionBody.set_translation(posX,posY);
+    for(it = world->gameobjects.begin(); it != world->gameobjects.end(); ++it)
+    {
+      
+      if((*it)->hitCheck(this->collisionBody) && (*it)!=this)flag=1;
+    }
+    if(flag==1 && (destPosX != posX || destPosY != posY))
+    {
+      posX=tempx;
+      posY=tempy;
+      destPosX=tempx;
+      destPosY=tempy;
+      collisionBody.set_translation(posX,posY);
+      spriteBody = spriteBodyStill;
+    }
+    else if(flag==0)
+      thepointer=0;
     return true;
 }
 

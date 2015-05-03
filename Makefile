@@ -5,7 +5,9 @@ OBJF=./Sources/world.o \
 ./Sources/persona.o \
 ./Sources/program.o \
 ./Sources/precomp.o \
-./Sources/missile.o
+./Sources/missile.o \
+./Sources/building.o \
+./Sources/creep.o
 
 LIBS=clanCore clanDisplay clanSound clanApp clanGL clanSWRender
 

@@ -32,5 +32,6 @@ private:
     float posX;
     float posY;
     int range;
+    int damage;
     bool exploding;
 };

@@ -9,7 +9,8 @@ public:
     enum PersonaType {
         GEN_MAX,
         STAINER,
-        GANYMEDE
+        GANYMEDE,
+        TYPE1
     };
     
     //init
@@ -20,6 +21,7 @@ public:
 public:
     bool isSelected() const;
     bool sentinal;
+    bool scourge;
     bool isRange;
     PersonaType heroType;
     
@@ -46,13 +48,14 @@ public:
 private:
     int experience;
     int gold;
+    int thepointer;
 
     float baseHealthRegen;
     float baseManaRegen;
     int maxHealth;
     int maxMana;
-    int health;
-    int mana;
+    float health;
+    float mana;
     
     short agility;
     short strength;
@@ -65,7 +68,7 @@ private:
     float moveSpeed;
 
     //Attributes hidden
-private:
+protected:
     clan::Image HealthBar;
     clan::Image Health;
     clan::Image ManaBar;
@@ -79,6 +82,7 @@ private:
     clan::Sprite spriteBodyMovingDown;
     clan::Sprite spriteSelected;
     clan::Sprite spriteAttack;
+    clan::Sprite spriteDeath;
     
     clan::CollisionOutline collisionBody;
     GameObject *followObj;

@@ -3,6 +3,8 @@
 
 #include "world.h"
 #include "persona.h"
+#include "creep.h"
+#include "building.h"
 
 #define MAP_WIDTH 1366
 #define MAP_HEIGHT 768
@@ -73,18 +75,39 @@ World::~World() {
 }
 
 void World::initLevel() {
+
+    int no,i;
+    
+    no=12;
+    int xcoord[12]={800,800,800,1500,1500,1500,2200,2200,2200,2900,2900,2900};
+    int ycoord[12]={600,1200,1800,600,1200,1800,600,1200,1800,600,1200,1800};
+    Building *wall;
+    
+    for(i=0;i<no;i++)
+    {
+        wall=new Building(Building::WALL,this);
+        wall->setPos(xcoord[i],ycoord[i]);
+        addGameObject(wall);
+
+    }
     Persona *person1 = new Persona(Persona::STAINER, this);
     person1->setPos(100,100);
     Persona *person2 = new Persona(Persona::GANYMEDE, this);
+    Creep *creep1 = new Creep(Persona::TYPE1, this);
     person2->setPos(150,150);
+    creep1->setPos(500,500);
     
     gameobjects.push_back(person1);
+    gameobjects.push_back(creep1);
     persons.push_back(person1);
+    persons.push_back(creep1);
     sentinal.push_back(person1);
     person1->sentinal = true;
+    person1->scourge = false;
     gameobjects.push_back(person2);
     persons.push_back(person2);
     scourge.push_back(person2);
+    person2->scourge = true;
     person2->sentinal = false;
 }
 
@@ -230,8 +253,18 @@ void World::draw() {
 
     game_map.draw(canvas, -max_wt,-max_ht);
     
-    // mini_map.set_scale(0.2f, 0.2f);
+    // Draw all gameobjects
+    std::list<GameObject *>::iterator it;
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it){
+        (*it)->draw();
+    }
+    
     mini_map.draw(canvas, 1366-mini_map.get_width(),768-mini_map.get_height());
+    for(it = gameobjects.begin(); it != gameobjects.end(); ++it){
+        (*it)->getPos(xPos,yPos);
+        mini_dot.draw(canvas,1366 - mini_map.get_width() + (int)((float)(xPos + max_wt)/(w_ratio)), 768 - mini_map.get_height() + (int)((float)(yPos + max_ht)/(h_ratio)));
+    }
+    // mini_map.set_scale(0.2f, 0.2f);
     ability1.draw(canvas, 0*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
     ability2.draw(canvas, 1*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
     ability3.draw(canvas, 2*(MAP_WIDTH-mini_map.get_width())/4, MAP_HEIGHT - ability1.get_height() - 50);
@@ -240,13 +273,6 @@ void World::draw() {
     // mini_map_select.set_scale(0.05f,0.05f);
     mini_map_select.draw(canvas,1366 - mini_map.get_width() + mini_map_select.get_width()/2 + max_wt/13 , 768 - mini_map.get_height() + mini_map_select.get_height()/2 + max_ht/12);
 
-    // Draw all gameobjects
-    std::list<GameObject *>::iterator it;
-    for(it = gameobjects.begin(); it != gameobjects.end(); ++it){
-        (*it)->draw();
-        (*it)->getPos(xPos,yPos);
-        mini_dot.draw(canvas,1366 - mini_map.get_width() + (int)((float)(xPos + max_wt)/(w_ratio)), 768 - mini_map.get_height() + (int)((float)(yPos + max_ht)/(h_ratio)));
-    }
     canvas.flush();
 }
 

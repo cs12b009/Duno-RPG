@@ -186,6 +186,47 @@
             <animation speed="1" />
         </sprite>
      
+//----- (N E U T R A L) C R E E P S
+
+        <sprite name="Neutral1Attacking" base_angle="0">
+            <image file="Gfx/neutral/neutral1_attack1.png" />
+            <image file="Gfx/neutral/neutral1_attack2.png" />
+            <image file="Gfx/neutral/neutral1_attack3.png" />
+            <image file="Gfx/neutral/neutral1_attack4.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        <sprite name="Neutral1Still" base_angle="0">
+            <image file="Gfx/neutral/neutral1_still.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        <sprite name="Neutral1Moving" base_angle="0">
+            <image file="Gfx/neutral/neutral1_moving1.png" />
+            <image file="Gfx/neutral/neutral1_moving2.png" />
+            <image file="Gfx/neutral/neutral1_moving3.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        <sprite name="Neutral1Death" base_angle="0">
+            <image file="Gfx/neutral/neutral1_death1.png" />
+            <image file="Gfx/neutral/neutral1_death2.png" />
+            <image file="Gfx/neutral/neutral1_death3.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
+        
+//------- W A L L
+        <sprite name="wall" base_angle="0">
+            <image file="Gfx/wall.png" />
+            <translation origin="center" />
+            <animation speed="100" />
+        </sprite>
+        
 //-----S O U N D S
         <sample name="Music1" file="Sound/Song.ogg"/>
 
